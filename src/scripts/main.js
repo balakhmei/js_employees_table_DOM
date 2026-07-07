@@ -1,16 +1,15 @@
 'use strict';
 
 const headers = document.querySelectorAll('th');
-const rows = document.querySelectorAll('tbody tr');
 let sortColumn = null;
 let sortDirection = 'asc';
 
 headers.forEach((header) => {
   header.addEventListener('click', (evt) => {
     const th = evt.target.closest('th');
-    const tbody = document.querySelector('tbody');
+    const tbodyHeader = document.querySelector('tbody');
     const columnNumber = th.cellIndex;
-    const data = Array.from(tbody.rows);
+    const data = Array.from(tbodyHeader.rows);
 
     if (sortColumn === columnNumber) {
       sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -38,17 +37,23 @@ headers.forEach((header) => {
       return sortDirection === 'asc' ? result : -result;
     });
 
-    tbody.append(...data);
+    tbodyHeader.append(...data);
   });
 });
 
-rows.forEach((row) => {
-  row.addEventListener('click', () => {
-    document
-      .querySelectorAll('tbody tr')
-      .forEach((r) => r.classList.remove('active'));
-    row.classList.add('active');
-  });
+const tbody = document.querySelector('tbody');
+
+tbody.addEventListener('click', (e) => {
+  const row = e.target.closest('tr');
+
+  if (!row) {
+    return;
+  }
+
+  document
+    .querySelectorAll('tbody tr')
+    .forEach((r) => r.classList.remove('active'));
+  row.classList.add('active');
 });
 
 const body = document.body;
@@ -219,7 +224,7 @@ form.addEventListener('submit', function (evt) {
 
   const salary = Number(salaryValue);
 
-  const tbody = document.querySelector('tbody');
+  const tbodyForm = document.querySelector('tbody');
   const row = document.createElement('tr');
   const nameTd = document.createElement('td');
   const positionTd = document.createElement('td');
@@ -235,7 +240,7 @@ form.addEventListener('submit', function (evt) {
 
   row.append(nameTd, positionTd, officeTd, ageTd, salaryTd);
 
-  tbody.append(row);
+  tbodyForm.append(row);
 
   showNotification('success', 'Success', 'SUCCESS');
 });
